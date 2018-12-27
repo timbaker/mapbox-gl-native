@@ -31,3 +31,11 @@ include(${CMAKE_SOURCE_DIR}/vendor/wagyu.cmake)
 if(MBGL_PLATFORM STREQUAL "linux" OR MBGL_PLATFORM STREQUAL "macos")
     include(${CMAKE_SOURCE_DIR}/vendor/glfw.cmake)
 endif()
+
+if(MBGL_PLATFORM STREQUAL "pz")
+    include(${CMAKE_SOURCE_DIR}/vendor/libjpeg-turbo.cmake)
+    # zlib before libpng
+    include(${CMAKE_SOURCE_DIR}/vendor/zlib.cmake)
+    include(${CMAKE_SOURCE_DIR}/vendor/libpng.cmake)
+endif()
+

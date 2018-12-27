@@ -2,6 +2,11 @@
 load_sources_list(MBGL_CORE_FILES cmake/core-files.txt)
 add_library(mbgl-core STATIC ${MBGL_CORE_FILES})
 
+# tnb
+target_compile_options(mbgl-core
+    PRIVATE -std=c++14 -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-extra-semi -Wno-reserved-id-macro -Wno-exit-time-destructors -Wno-undefined-func-template -Wno-conversion -Wno-double-promotion -Wno-float-equal -Wno-documentation -Wno-documentation-unknown-command -Wno-zero-as-null-pointer-constant -Wno-old-style-cast -Wno-deprecated-dynamic-exception-spec -Wno-error
+)
+
 target_include_directories(mbgl-core
     PUBLIC include
     PRIVATE src

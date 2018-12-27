@@ -79,3 +79,12 @@
 [submodule "vendor/eternal"]
 	path = vendor/eternal
 	url = https://github.com/mapbox/eternal.git
+[submodule "vendor/libpng"]
+	path = vendor/libpng
+	url = https://github.com/glennrp/libpng.git
+[submodule "vendor/libjpeg-turbo"]
+	path = vendor/libjpeg-turbo
+	url = https://github.com/libjpeg-turbo/libjpeg-turbo.git
+[submodule "vendor/zlib"]
+	path = vendor/zlib
+	url = https://github.com/timbaker/zlib.git

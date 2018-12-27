@@ -23,6 +23,7 @@ target_compile_definitions(icu PRIVATE
     U_CHAR_TYPE=uint_least16_t
     U_HAVE_ATOMIC=1
     U_HAVE_STRTOD_L=0
+    U_STATIC_IMPLEMENTATION=1
     _REENTRANT
 )
 

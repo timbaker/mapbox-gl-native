@@ -26,6 +26,10 @@ constexpr double tileSize = 512;
  */
 constexpr int32_t EXTENT = 8192;
 
+#if !defined(M_PI) // tnb
+#define M_PI 3.14159265358979323846
+#endif
+
 constexpr double DEG2RAD = M_PI / 180.0;
 constexpr double RAD2DEG = 180.0 / M_PI;
 constexpr double M2PI = M_PI * 2;

@@ -13,6 +13,11 @@ target_link_libraries(mbgl-filesource
     PUBLIC expected
 )
 
+# tnb
+target_compile_options(mbgl-filesource
+    PRIVATE -std=c++14 -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-error
+)
+
 mbgl_filesource()
 
 create_source_groups(mbgl-filesource)

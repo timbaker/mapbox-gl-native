@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.4)
 project(mbgl LANGUAGES CXX C)
 
-set(CMAKE_CONFIGURATION_TYPES Debug Release RelWithDebInfo Sanitize)
+set(CMAKE_CONFIGURATION_TYPES Debug Release RelWithDebInfo)
 
 # Compiler configuration
 set(CMAKE_CXX_EXTENSIONS OFF)

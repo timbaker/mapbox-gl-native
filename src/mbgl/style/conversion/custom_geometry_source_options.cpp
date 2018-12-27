@@ -63,7 +63,7 @@ optional<CustomGeometrySource::Options> Converter<CustomGeometrySource::Options>
         if (toBool(*clipValue)) {
             options.tileOptions.clip = static_cast<double>(*toBool(*clipValue));
         } else {
-            error.message = "CustomGeometrySource TileOptiosn clip value must be a boolean";
+            error.message = "CustomGeometrySource TileOptions clip value must be a boolean";
             return nullopt;
         }
     }

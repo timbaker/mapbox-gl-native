@@ -105,6 +105,9 @@ public:
         return bounds;
     }
 
+	// tnb
+	LatLngBounds() {}
+
     // Constructs a LatLngBounds object with the tile's exact boundaries.
     LatLngBounds(const CanonicalTileID&);
 
