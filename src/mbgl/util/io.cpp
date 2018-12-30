@@ -7,6 +7,24 @@
 #include <sstream>
 #include <fstream>
 
+#ifdef _WINDOWS
+// https://stackoverflow.com/questions/30829364/open-utf8-encoded-filename-in-c-windows
+#ifndef WIN32_LEAN_AND_MEAN
+#define WIN32_LEAN_AND_MEAN 1
+#endif
+#include <Windows.h>
+static std::wstring toWString(const std::string& str)
+{
+	std::wstring ret;
+	int len = MultiByteToWideChar(CP_UTF8, 0, str.c_str(), (int)str.length(), NULL, 0);
+	if (len > 0) {
+		ret.resize(len);
+		MultiByteToWideChar(CP_UTF8, 0, str.c_str(), (int)str.length(), &ret[0], len);
+	}
+	return ret;
+}
+#endif
+
 namespace mbgl {
 namespace util {
 
@@ -36,7 +54,12 @@ std::string read_file(const std::string &filename) {
 }
 
 optional<std::string> readFile(const std::string &filename) {
+#if _WINDOWS // tnb
+	std::wstring wfilename = toWString(filename);
+	std::ifstream file(wfilename.c_str(), std::ios::binary);
+#else
     std::ifstream file(filename, std::ios::binary);
+#endif
     if (file.good()) {
         std::stringstream data;
         data << file.rdbuf();
