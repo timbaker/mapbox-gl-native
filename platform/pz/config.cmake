@@ -76,10 +76,16 @@ endmacro()
 macro(mbgl_filesource)
     target_sources(mbgl-filesource
         # File source
-        PRIVATE platform/pz/src/http_file_source.cpp
+        PRIVATE platform/pz/src/mbgl/storage/default_file_source.cpp
+        PRIVATE platform/pz/src/mbgl/storage/http_file_source.cpp
+        PRIVATE platform/pz/src/mbgl/storage/mbtiles_file_source.cpp
 
         # Database
         PRIVATE platform/default/src/mbgl/storage/sqlite3.cpp
+    )
+
+    target_include_directories(mbgl-filesource
+        PRIVATE platform/pz/include
     )
 
     set_target_properties(mbgl-filesource PROPERTIES DEBUG_POSTFIX "d")
