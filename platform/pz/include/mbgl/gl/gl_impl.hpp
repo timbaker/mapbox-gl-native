@@ -3,6 +3,9 @@
 #ifndef WIN32_LEAN_AND_MEAN
 #define WIN32_LEAN_AND_MEAN 1
 #endif
+#ifndef NOMINMAX
+#define NOMINMAX // min() and max() macros conflict with std::min() and std::max()
+#endif
 #include <windows.h>
 
 #if MBGL_USE_GLES2
