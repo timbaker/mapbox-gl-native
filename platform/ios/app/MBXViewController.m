@@ -7,6 +7,7 @@
 #import "MBXUserLocationAnnotationView.h"
 #import "LimeGreenStyleLayer.h"
 #import "MBXEmbeddedMapViewController.h"
+#import "MBXOrnamentsViewController.h"
 
 #import "MBXFrameTimeGraphView.h"
 
@@ -104,8 +105,9 @@ typedef NS_ENUM(NSInteger, MBXSettingsMiscellaneousRows) {
     MBXSettingsMiscellaneousShowSnapshots,
     MBXSettingsMiscellaneousShouldLimitCameraChanges,
     MBXSettingsMiscellaneousShowCustomLocationManager,
+    MBXSettingsMiscellaneousOrnamentsPlacement,
     MBXSettingsMiscellaneousPrintLogFile,
-    MBXSettingsMiscellaneousDeleteLogFile,
+    MBXSettingsMiscellaneousDeleteLogFile
 };
 
 // Utility methods
@@ -205,6 +207,7 @@ CLLocationCoordinate2D randomWorldCoordinate() {
 @property (nonatomic) BOOL frameTimeGraphEnabled;
 @property (nonatomic) BOOL shouldLimitCameraChanges;
 @property (nonatomic) BOOL randomWalk;
+@property (nonatomic) NSMutableArray<UIWindow *> *helperWindows;
 
 @end
 
@@ -289,6 +292,32 @@ CLLocationCoordinate2D randomWorldCoordinate() {
         }
     }
     [self.mapView addGestureRecognizer:singleTap];
+    
+    // Display a secondary map on any connected external display.
+    // https://developer.apple.com/documentation/uikit/windows_and_screens/displaying_content_on_a_connected_screen?language=objc
+    self.helperWindows = [NSMutableArray array];
+    [[NSNotificationCenter defaultCenter] addObserverForName:UIScreenDidConnectNotification object:nil queue:nil usingBlock:^(NSNotification * _Nonnull note) {
+        UIScreen *helperScreen = note.object;
+        UIWindow *helperWindow = [[UIWindow alloc] initWithFrame:helperScreen.bounds];
+        helperWindow.screen = helperScreen;
+        UIViewController *helperViewController = [[UIViewController alloc] init];
+        MGLMapView *helperMapView = [[MGLMapView alloc] initWithFrame:helperWindow.bounds styleURL:MGLStyle.satelliteStreetsStyleURL];
+        helperMapView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
+        helperMapView.camera = self.mapView.camera;
+        helperMapView.compassView.hidden = YES;
+        helperViewController.view = helperMapView;
+        helperWindow.rootViewController = helperViewController;
+        helperWindow.hidden = NO;
+        [self.helperWindows addObject:helperWindow];
+    }];
+    [[NSNotificationCenter defaultCenter] addObserverForName:UIScreenDidDisconnectNotification object:nil queue:nil usingBlock:^(NSNotification * _Nonnull note) {
+        UIScreen *helperScreen = note.object;
+        for (UIWindow *window in self.helperWindows) {
+            if (window.screen == helperScreen) {
+                [self.helperWindows removeObject:window];
+            }
+        }
+    }];
 }
 
 - (void)saveState:(__unused NSNotification *)notification
@@ -472,6 +501,7 @@ CLLocationCoordinate2D randomWorldCoordinate() {
                 @"Show Snapshots",
                 [NSString stringWithFormat:@"%@ Camera Changes", (_shouldLimitCameraChanges ? @"Unlimit" : @"Limit")],
                 @"View Route Simulation",
+                @"Ornaments Placement",
             ]];
 
             if (self.debugLoggingEnabled)
@@ -727,6 +757,12 @@ CLLocationCoordinate2D randomWorldCoordinate() {
                     if (self.shouldLimitCameraChanges) {
                         [self.mapView setCenterCoordinate:CLLocationCoordinate2DMake(39.748947, -104.995882) zoomLevel:10 direction:0 animated:NO];
                     }
+                    break;
+                }
+                case MBXSettingsMiscellaneousOrnamentsPlacement:
+                {
+                    MBXOrnamentsViewController *ornamentsViewController = [[MBXOrnamentsViewController alloc] init];
+                    [self.navigationController pushViewController:ornamentsViewController animated:YES];
                     break;
                 }
                 default:
@@ -2214,6 +2250,7 @@ CLLocationCoordinate2D randomWorldCoordinate() {
 - (void)mapViewRegionIsChanging:(MGLMapView *)mapView
 {
     [self updateHUD];
+    [self updateHelperMapViews];
 }
 
 - (void)mapView:(MGLMapView *)mapView regionDidChangeWithReason:(MGLCameraChangeReason)reason animated:(BOOL)animated
@@ -2223,10 +2260,18 @@ CLLocationCoordinate2D randomWorldCoordinate() {
     }
 
     [self updateHUD];
+    [self updateHelperMapViews];
 }
 
 - (void)mapView:(MGLMapView *)mapView didUpdateUserLocation:(MGLUserLocation *)userLocation {
     [self updateHUD];
+}
+
+- (void)updateHelperMapViews {
+    for (UIWindow *window in self.helperWindows) {
+        MGLMapView *mapView = (MGLMapView *)window.rootViewController.view;
+        mapView.camera = self.mapView.camera;
+    }
 }
 
 - (void)updateHUD {

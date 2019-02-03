@@ -4,8 +4,37 @@ Mapbox welcomes participation and contributions from everyone. Please read [CONT
 
 ## master
 
+* Fixed a bug where setting `MGLMapView.userTrackingMode` to `MGLUserTrackingModeFollowWithHeading` and `MGLUserTrackingModeFollowWithCourse` was being ignored. ([#13849](https://github.com/mapbox/mapbox-gl-native/pull/13849))
+
+## 4.8.0
+
+### Styles and rendering
+
 * Added an `MGLStyle.performsPlacementTransitions` property to control how long it takes for colliding labels to fade out. ([#13565](https://github.com/mapbox/mapbox-gl-native/pull/13565))
 * Fixed a crash when casting large numbers in `NSExpression`. ([#13580](https://github.com/mapbox/mapbox-gl-native/pull/13580))
+* Added the `-[MGLShapeSource leavesOfCluster:offset:limit:]`, `-[MGLShapeSource childrenOfCluster:]`, `-[MGLShapeSource zoomLevelForExpandingCluster:]` methods for inspecting a cluster in an `MGLShapeSource`s created with the `MGLShapeSourceOptionClustered` option. Feature querying now returns clusters represented by `MGLPointFeatureCluster` objects (that conform to the `MGLCluster` protocol). ([#12952](https://github.com/mapbox/mapbox-gl-native/pull/12952)
+
+### Annotations
+
+* Fixed a bug where the `animated` parameter to `-[MGLMapView selectAnnotation:animated:]` was being ignored. ([#13689](https://github.com/mapbox/mapbox-gl-native/pull/13689))
+* Fixed a bug where selecting partially on-screen annotations (without a callout) would move the map. ([#13727](https://github.com/mapbox/mapbox-gl-native/pull/13727))
+
+### Packaging
+
+* Added a Czech localization. ([#13782](https://github.com/mapbox/mapbox-gl-native/pull/13782))
+
+### Other changes
+
+* Reinstates version 11 as the default Mapbox Streets style (as introduced in 4.7.0). ([#13690](https://github.com/mapbox/mapbox-gl-native/pull/13690))
+* `MGLMapView` no longer freezes on external displays connected through AirPlay or CarPlay when the main device’s screen goes to sleep or the user manually locks the screen. ([#13701](https://github.com/mapbox/mapbox-gl-native/pull/13701))
+* Fixed an issue calculating the viewport when setting visible coordinates with a `direction`. ([#13761](https://github.com/mapbox/mapbox-gl-native/pull/13761))
+
+## 4.7.1 - December 21, 2018
+
+### Styles and rendering
+
+* Reverts the ability for `MGLMapView`, `MGLShapeOfflineRegion`, and `MGLTilePyramidOfflineRegion` to use version 11 of the Mapbox Streets style. ([#13650](https://github.com/mapbox/mapbox-gl-native/pull/13650))
+* Reverts the ability for convenience methods on `MGLStyle` such as `MGLStyle.lightStyleURL`, to use version 11 of the Mapbox Streets style. ([#13650](https://github.com/mapbox/mapbox-gl-native/pull/13650))
 
 ## 4.7.0 - December 18, 2018
 
@@ -29,6 +58,10 @@ Mapbox welcomes participation and contributions from everyone. Please read [CONT
 
 * `MGLMapSnapshotter` now respects the `MGLIdeographicFontFamilyName` key in Info.plist, which reduces bandwidth consumption when snapshotting regions that contain Chinese or Japanese characters. ([#13427](https://github.com/mapbox/mapbox-gl-native/pull/13427))
 * Fixed a sporadic crash when using `MGLMapSnapshotter`. ([#13300](https://github.com/mapbox/mapbox-gl-native/pull/13300))
+
+### User interaction
+
+* Added options to customize position of scale bar, compass, logo and attribution. ([#13556](https://github.com/mapbox/mapbox-gl-native/pull/13556))
 
 ### Other changes
 
